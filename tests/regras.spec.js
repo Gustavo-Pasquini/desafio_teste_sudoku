@@ -40,3 +40,44 @@ test.each(['0', '1'])('TC-SB-11 mais de três %s na coluna marca os quatro valor
 
   for (const l of [0, 1, 3, 4]) expect(celula(l, 2)).toHaveAttribute('data-erro', 'true');
 });
+
+test('TC-SB-12 linhas completas repetidas marcam as 12 células', async () => {
+  const user = await abrirJogo({ puzzle: VAZIO });
+  const linha = '001101';
+  for (const l of [0, 1]) for (let c = 0; c < 6; c++) await definir(user, l, c, linha[c]);
+
+  for (const l of [0, 1]) for (let c = 0; c < 6; c++) {
+    expect(celula(l, c)).toHaveAttribute('data-erro', 'true');
+  }
+});
+
+test('TC-SB-13 colunas completas repetidas marcam as 12 células', async () => {
+  const user = await abrirJogo({ puzzle: VAZIO });
+  const coluna = '001101';
+  for (const c of [0, 1]) for (let l = 0; l < 6; l++) await definir(user, l, c, coluna[l]);
+
+  for (const c of [0, 1]) for (let l = 0; l < 6; l++) {
+    expect(celula(l, c)).toHaveAttribute('data-erro', 'true');
+  }
+});
+
+test('TC-SB-14 corrigir a trinca remove as marcas de erro', async () => {
+  const user = await abrirJogo({ puzzle: VAZIO });
+  for (let c = 0; c < 3; c++) await definir(user, 0, c, '0');
+  expect(celula(0, 2)).toHaveAttribute('data-erro', 'true');
+
+  await user.click(celula(0, 2));
+  expect(celula(0, 2)).toHaveAttribute('data-valor', '1');
+  for (let c = 0; c < 6; c++) expect(celula(0, c)).not.toHaveAttribute('data-erro');
+});
+
+test('TC-SB-18 linhas incompletas iguais não são marcadas como erro', async () => {
+  const user = await abrirJogo({ puzzle: VAZIO });
+  const linhaIncompleta = '00110';
+  for (const l of [0, 1]) for (let c = 0; c < 5; c++) await definir(user, l, c, linhaIncompleta[c]);
+
+  for (const l of [0, 1]) for (let c = 0; c < 5; c++) {
+    expect(celula(l, c)).toHaveAttribute('data-valor', linhaIncompleta[c]);
+    expect(celula(l, c)).not.toHaveAttribute('data-erro');
+  }
+});
