@@ -1,9 +1,18 @@
 // Testes do tabuleiro, preenchimento e banco de puzzles (Gustavo — G2, G3, G4). Casos da seção 5 do PLANEJAMENTO.md.
 // Modo somente testes: o jogo ainda não existe, então estes testes FALHAM de propósito.
-import { test, expect } from 'vitest';
+import { test, expect, vi, afterEach } from 'vitest';
 import { abrirJogo, screen, celula, todasAsCelulas, preencher, P1, PUZZLES, S1, VAZIO } from './helpers.js';
 
 const celulaDoIndice = (i) => celula(Math.floor(i / 6), i % 6);
+/** Padrão das fixas na mesma notação do banco ('.' = não fixa). */
+const padraoDasFixas = () =>
+  Array.from({ length: 36 }, (_, i) =>
+    celulaDoIndice(i).getAttribute('data-fixa') === 'true' ? celulaDoIndice(i).getAttribute('data-valor') : '.',
+  ).join('');
+
+afterEach(() => {
+  vi.useRealTimers();
+});
 
 test('TC-SB-01 tabuleiro 6 × 6: 36 células', async () => {
   await abrirJogo({ puzzle: P1 });
@@ -73,4 +82,48 @@ test('TC-SB-05 limpar apaga só o que o jogador preencheu', async () => {
     expect(celulaDoIndice(i)).toHaveAttribute('data-valor', P1[i]);
     expect(celulaDoIndice(i)).toHaveAttribute('data-fixa', 'true');
   }
+});
+
+test('TC-SB-06 novo jogo carrega um puzzle do banco e zera o jogo', async () => {
+  vi.useFakeTimers({ toFake: ['setTimeout', 'clearTimeout', 'setInterval', 'clearInterval', 'Date', 'performance'] });
+  const user = await abrirJogo({ puzzle: P1 }, { advanceTimers: vi.advanceTimersByTime });
+  await user.click(celula(0, 0)); // jogo em andamento: o jogador preencheu algo...
+  vi.advanceTimersByTime(3000); // ... e o tempo passou
+  await user.click(screen.getByTestId('btn-novo'));
+  const padrao = padraoDasFixas();
+  expect(PUZZLES).toContain(padrao);
+  for (let i = 0; i < 36; i++) {
+    if (padrao[i] === '.') expect(celulaDoIndice(i)).toHaveAttribute('data-valor', '');
+  }
+  expect(screen.getByTestId('cronometro')).toHaveTextContent(/^0$/);
+});
+
+test.each(PUZZLES.map((p, i) => [`P${i + 1}`, p]))('TC-SB-07 puzzle %s do banco carrega sem erros', async (_nome, puzzle) => {
+  await abrirJogo({ puzzle });
+  expect(todasAsCelulas()).toHaveLength(36);
+  const dicas = [...puzzle].filter((ch) => ch !== '.').length;
+  expect(todasAsCelulas().filter((c) => c.getAttribute('data-fixa') === 'true')).toHaveLength(dicas);
+  expect(todasAsCelulas().filter((c) => c.getAttribute('data-erro') === 'true')).toHaveLength(0);
+});
+
+test('TC-SB-17 novo jogo sempre traz um puzzle diferente do atual', async () => {
+  const user = await abrirJogo({ puzzle: P1 });
+  let anterior = P1;
+  for (let i = 0; i < 10; i++) {
+    await user.click(screen.getByTestId('btn-novo'));
+    const atual = padraoDasFixas();
+    expect(PUZZLES).toContain(atual);
+    expect(atual).not.toBe(anterior);
+    anterior = atual;
+  }
+});
+
+test('TC-SB-20 cronômetro começa no primeiro clique', async () => {
+  vi.useFakeTimers({ toFake: ['setTimeout', 'clearTimeout', 'setInterval', 'clearInterval', 'Date', 'performance'] });
+  const user = await abrirJogo({ puzzle: P1 }, { advanceTimers: vi.advanceTimersByTime });
+  vi.advanceTimersByTime(2000);
+  expect(screen.getByTestId('cronometro')).toHaveTextContent(/^0$/); // sem clique, não conta
+  await user.click(celula(0, 0));
+  vi.advanceTimersByTime(2000);
+  expect(Number(screen.getByTestId('cronometro').textContent)).toBeGreaterThanOrEqual(1);
 });
