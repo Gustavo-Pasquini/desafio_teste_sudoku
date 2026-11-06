@@ -42,4 +42,27 @@ O projeto está preparado para **Claude Code** e **Codex**. Os dois escrevem os 
 - Claude Code: `/tdd G2` · Codex: `$tdd G2` · depois, "go" escreve o próximo caso de teste.
 - Detalhes, técnicas e fontes: [docs/TDD-COM-IA.md](docs/TDD-COM-IA.md).
 
-> Status: em planejamento. A tabela "ID → arquivo → o que verifica" será preenchida aqui conforme os testes forem escritos (tarefa B1).
+### ID → arquivo → o que verifica
+
+| ID | Arquivo | O que verifica |
+|---|---|---|
+| TC-SB-01 | `tests/tabuleiro.spec.js` | Grade 6 × 6 com 36 células |
+| TC-SB-02 | `tests/tabuleiro.spec.js` | Valores e bloqueio das células fixas |
+| TC-SB-03 | `tests/tabuleiro.spec.js` | Célula fixa não muda com cliques |
+| TC-SB-04 | `tests/tabuleiro.spec.js` | Ciclo vazia → 0 → 1 → vazia |
+| TC-SB-05 | `tests/tabuleiro.spec.js` | Limpeza preservando células fixas |
+| TC-SB-06 | `tests/tabuleiro.spec.js` | Novo jogo limpa preenchimento e cronômetro |
+| TC-SB-07 | `tests/tabuleiro.spec.js` | Puzzles do banco carregam sem erros |
+| TC-SB-08 | `tests/regras.spec.js` | Trincas horizontais de 0 e 1 |
+| TC-SB-09 | `tests/regras.spec.js` | Trincas verticais de 0 e 1 |
+| TC-SB-10 | `tests/regras.spec.js` | Mais de três valores iguais na linha |
+| TC-SB-11 | `tests/regras.spec.js` | Mais de três valores iguais na coluna |
+| TC-SB-12 | `tests/regras.spec.js` | Linhas completas repetidas |
+| TC-SB-13 | `tests/regras.spec.js` | Colunas completas repetidas |
+| TC-SB-14 | `tests/regras.spec.js` | Remoção da marca ao corrigir uma trinca |
+| TC-SB-15 | `tests/vitoria.spec.js` | Vitória, cronômetro parado e tabuleiro travado |
+| TC-SB-16 | `tests/vitoria.spec.js` | Tabuleiro completo inválido permanece editável |
+| TC-SB-17 | `tests/tabuleiro.spec.js` | Novo jogo sempre troca o puzzle |
+| TC-SB-18 | `tests/regras.spec.js` | Linhas incompletas iguais não geram erro |
+| TC-SB-19 | `tests/tabuleiro.spec.js` | Limpar remove as marcas de erro |
+| TC-SB-20 | `tests/tabuleiro.spec.js` | Cronômetro inicia no primeiro clique |
