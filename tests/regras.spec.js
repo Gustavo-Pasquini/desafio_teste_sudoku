@@ -40,3 +40,13 @@ test.each(['0', '1'])('TC-SB-11 mais de três %s na coluna marca os quatro valor
 
   for (const l of [0, 1, 3, 4]) expect(celula(l, 2)).toHaveAttribute('data-erro', 'true');
 });
+
+test('TC-SB-12 linhas completas repetidas marcam as 12 células', async () => {
+  const user = await abrirJogo({ puzzle: VAZIO });
+  const linha = '001101';
+  for (const l of [0, 1]) for (let c = 0; c < 6; c++) await definir(user, l, c, linha[c]);
+
+  for (const l of [0, 1]) for (let c = 0; c < 6; c++) {
+    expect(celula(l, c)).toHaveAttribute('data-erro', 'true');
+  }
+});
