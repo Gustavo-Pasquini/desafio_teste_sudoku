@@ -37,10 +37,11 @@ test.each(['0', '1'])('TC-SB-10 mais de três %s na linha marca os quatro valore
 test.each(['0', '1'])('TC-SB-11 mais de três %s na coluna marca os quatro valores', async (valor) => {
   const user = await abrirJogo({ puzzle: VAZIO });
   const oposto = valor === '0' ? '1' : '0';
+  await definir(user, 2, 2, oposto); // o oposto entra primeiro: nunca existe trinca, nem por um instante
   for (const l of [0, 1, 3, 4]) await definir(user, l, 2, valor);
-  await definir(user, 2, 2, oposto);
 
   for (const l of [0, 1, 3, 4]) expect(celula(l, 2)).toHaveAttribute('data-erro', 'true');
+  expect(celula(2, 2)).not.toHaveAttribute('data-erro', 'true'); // o valor em minoria não é erro
 });
 
 test('TC-SB-12 linhas completas repetidas marcam as 12 células', async () => {
