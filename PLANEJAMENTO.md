@@ -18,6 +18,7 @@ Sudoku binário (Takuzu / Binairo) de **6 × 6**: **casos de teste de interface 
 - **Regra 3 — sem repetição:** duas linhas completas não podem ser iguais; duas colunas completas também não.
 - **Preenchimento:** clicar numa célula alterna vazia → `0` → `1` → vazia.
 - **Erros** aparecem na hora: as células que quebram uma regra ficam marcadas.
+- **Cronômetro:** começa no primeiro clique numa célula e para na vitória.
 - **Vitória:** as 36 células preenchidas e nenhuma regra quebrada. Mostra mensagem, para o cronômetro e trava o tabuleiro.
 - **Limpar** apaga só o que o jogador preencheu. **Novo jogo** sorteia outro puzzle do banco (sempre diferente do atual), zera o que foi preenchido e o cronômetro.
 - Todo puzzle do banco tem **solução única**.
@@ -221,7 +222,7 @@ Cada integrante é **dono de arquivos de teste diferentes** (coluna "Arquivos").
 | **G1** Setup: `package.json`, `vitest.config.js` (`environment: 'jsdom'`), `js/main.js` vazio, `.gitignore`, `index.html` esqueleto (elementos fixos da seção 3 **vazios**, sem texto nem atributos de estado), `tests/helpers.js` com `abrirJogo(params)`, `P1`, `S1` e `preencher(user, grade)` | `gustavo/g1-setup` | index.html, js/main.js, config, tests/helpers.js | — |
 | **G2** Tabuleiro 6 × 6 e células fixas | `gustavo/g2-tabuleiro` | tests/tabuleiro.spec.js | TC-SB-01 a 03 |
 | **G3** Alternar valor e limpar | `gustavo/g3-preencher` | tests/tabuleiro.spec.js | TC-SB-04, 05, 19 |
-| **G4** Banco de puzzles e novo jogo | `gustavo/g4-novo-jogo` | tests/tabuleiro.spec.js | TC-SB-06, 07, 17 |
+| **G4** Banco de puzzles e novo jogo | `gustavo/g4-novo-jogo` | tests/tabuleiro.spec.js | TC-SB-06, 07, 17, 20 |
 
 ### Breno
 
@@ -230,7 +231,7 @@ Cada integrante é **dono de arquivos de teste diferentes** (coluna "Arquivos").
 | **B1** CI no GitHub Actions (`npm ci`, `npm run verificar`) + tabela de testes no README | `breno/b1-ci-readme` | .github/workflows, README.md | — |
 | **B2** Regra das trincas | `breno/b2-trincas` | tests/regras.spec.js | TC-SB-08, 09 |
 | **B3** Regra do equilíbrio | `breno/b3-equilibrio` | tests/regras.spec.js | TC-SB-10, 11 |
-| **B4** Linhas e colunas repetidas, correção do erro | `breno/b4-repetidas` | tests/regras.spec.js | TC-SB-12 a 14 |
+| **B4** Linhas e colunas repetidas, correção do erro | `breno/b4-repetidas` | tests/regras.spec.js | TC-SB-12 a 14, 18 |
 | **B5** Vitória e tabuleiro completo inválido | `breno/b5-vitoria` | tests/vitoria.spec.js | TC-SB-15, 16 |
 
 ## 5. Casos de teste (interface)
@@ -250,6 +251,7 @@ Para pôr `0` numa célula vazia: 1 clique. Para pôr `1`: 2 cliques. O helper `
 | TC-SB-06 | Novo jogo | `puzzle=P1` com relógio falso: preencher `celula-0-0`, avançar 3 s, clicar `btn-novo` | Padrão de fixas igual a um de P1–P5; células não fixas vazias (o que foi preenchido some); `cronometro` = 0 |
 | TC-SB-07 | Puzzles do banco são válidos | Abrir cada um de P1–P5 por `?puzzle=` | Nenhuma célula com `data-erro` ao carregar |
 | TC-SB-17 | Novo jogo troca o puzzle | `puzzle=P1`, clicar `btn-novo` 10 vezes | A cada clique o padrão de fixas é um de P1–P5 e **diferente** do anterior |
+| TC-SB-20 | Cronômetro começa no 1º clique | `puzzle=P1` com relógio falso: avançar 2 s sem clicar; clicar `celula-0-0`; avançar 2 s | Antes do clique = 0; depois ≥ 1 |
 
 ### Breno — regras e vitória
 
@@ -266,6 +268,9 @@ Tabuleiro vazio (`?puzzle=` + 36 pontos), salvo quando dito outro.
 | TC-SB-14 | Corrigir tira o erro | Fazer TC-SB-08 e depois mudar `celula-0-2` para `1` | Nenhuma célula da linha 0 com `data-erro` |
 | TC-SB-15 | Vitória | `puzzle=P1`, preencher com S1 | `mensagem` = "Parabéns, você resolveu!"; nenhuma `data-erro`; clicar numa célula não muda nada; cronômetro para |
 | TC-SB-16 | Completo mas errado | `puzzle=P1`, preencher S1, mas com `celula-0-0` = 0 e `celula-0-1` = 1 (linha 0 fica igual à linha 2, coluna 0 ganha `0 0 0` e coluna 1 ganha `1 1 1`) | Sem mensagem de vitória; pelo menos `celula-0-0` e `celula-0-1` com `data-erro`; tabuleiro continua editável |
+| TC-SB-18 | Linhas incompletas iguais não são erro | `puzzle=VAZIO`; linhas 0 e 1 = `0 0 1 1 0 _` | Nenhuma célula com `data-erro` |
+
+> **Ajuste da matriz de cobertura:** TC-SB-08 a 11 usam `test.each` com os dois valores (0 e 1) em cada direção.
 
 ## 6. Fluxo de trabalho no Git
 
