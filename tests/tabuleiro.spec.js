@@ -37,3 +37,13 @@ test('TC-SB-03 célula fixa não muda com cliques', async () => {
     expect(celula(0, 4)).toHaveAttribute('data-fixa', 'true');
   }
 });
+
+test('TC-SB-04 clique alterna vazia → 0 → 1 → vazia', async () => {
+  const user = await abrirJogo({ puzzle: P1 });
+  await user.click(celula(0, 0));
+  expect(celula(0, 0)).toHaveAttribute('data-valor', '0');
+  await user.click(celula(0, 0));
+  expect(celula(0, 0)).toHaveAttribute('data-valor', '1');
+  await user.click(celula(0, 0));
+  expect(celula(0, 0)).toHaveAttribute('data-valor', '');
+});
