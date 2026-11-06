@@ -88,3 +88,11 @@ test('TC-SB-06 novo jogo carrega um puzzle do banco', async () => {
   }
   expect(screen.getByTestId('cronometro')).toHaveTextContent(/^0$/);
 });
+
+test.each(PUZZLES.map((p, i) => [`P${i + 1}`, p]))('TC-SB-07 puzzle %s do banco carrega sem erros', async (_nome, puzzle) => {
+  await abrirJogo({ puzzle });
+  expect(todasAsCelulas()).toHaveLength(36);
+  const dicas = [...puzzle].filter((ch) => ch !== '.').length;
+  expect(todasAsCelulas().filter((c) => c.getAttribute('data-fixa') === 'true')).toHaveLength(dicas);
+  expect(todasAsCelulas().filter((c) => c.getAttribute('data-erro') === 'true')).toHaveLength(0);
+});
