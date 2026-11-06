@@ -21,6 +21,7 @@ test.each(['0', '1'])('TC-SB-09 trinca vertical de %s marca as três células', 
   for (let l = 2; l <= 4; l++) await definir(user, l, 4, valor);
 
   for (let l = 2; l <= 4; l++) expect(celula(l, 4)).toHaveAttribute('data-erro', 'true');
+  for (const l of [0, 1, 5]) expect(celula(l, 4)).not.toHaveAttribute('data-erro', 'true'); // só a trinca
 });
 
 test.each(['0', '1'])('TC-SB-10 mais de três %s na linha marca os quatro valores', async (valor) => {
