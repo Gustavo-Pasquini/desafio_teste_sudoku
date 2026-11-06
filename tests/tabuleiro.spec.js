@@ -1,9 +1,18 @@
 // Testes do tabuleiro, preenchimento e banco de puzzles (Gustavo — G2, G3, G4). Casos da seção 5 do PLANEJAMENTO.md.
 // Modo somente testes: o jogo ainda não existe, então estes testes FALHAM de propósito.
-import { test, expect } from 'vitest';
+import { test, expect, vi, afterEach } from 'vitest';
 import { abrirJogo, screen, celula, todasAsCelulas, preencher, P1, PUZZLES, S1, VAZIO } from './helpers.js';
 
 const celulaDoIndice = (i) => celula(Math.floor(i / 6), i % 6);
+/** Padrão das fixas na mesma notação do banco ('.' = não fixa). */
+const padraoDasFixas = () =>
+  Array.from({ length: 36 }, (_, i) =>
+    celulaDoIndice(i).getAttribute('data-fixa') === 'true' ? celulaDoIndice(i).getAttribute('data-valor') : '.',
+  ).join('');
+
+afterEach(() => {
+  vi.useRealTimers();
+});
 
 test('TC-SB-01 tabuleiro 6 × 6: 36 células', async () => {
   await abrirJogo({ puzzle: P1 });
@@ -75,13 +84,13 @@ test('TC-SB-05 limpar apaga só o que o jogador preencheu', async () => {
   }
 });
 
-test('TC-SB-06 novo jogo carrega um puzzle do banco', async () => {
-  const user = await abrirJogo();
+test('TC-SB-06 novo jogo carrega um puzzle do banco e zera o jogo', async () => {
+  vi.useFakeTimers({ toFake: ['setTimeout', 'clearTimeout', 'setInterval', 'clearInterval', 'Date', 'performance'] });
+  const user = await abrirJogo({ puzzle: P1 }, { advanceTimers: vi.advanceTimersByTime });
+  await user.click(celula(0, 0)); // jogo em andamento: o jogador preencheu algo...
+  vi.advanceTimersByTime(3000); // ... e o tempo passou
   await user.click(screen.getByTestId('btn-novo'));
-  // Padrão das fixas na mesma notação do banco ('.' = não fixa)
-  const padrao = Array.from({ length: 36 }, (_, i) =>
-    celulaDoIndice(i).getAttribute('data-fixa') === 'true' ? celulaDoIndice(i).getAttribute('data-valor') : '.',
-  ).join('');
+  const padrao = padraoDasFixas();
   expect(PUZZLES).toContain(padrao);
   for (let i = 0; i < 36; i++) {
     if (padrao[i] === '.') expect(celulaDoIndice(i)).toHaveAttribute('data-valor', '');
