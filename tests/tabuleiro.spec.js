@@ -74,3 +74,17 @@ test('TC-SB-05 limpar apaga só o que o jogador preencheu', async () => {
     expect(celulaDoIndice(i)).toHaveAttribute('data-fixa', 'true');
   }
 });
+
+test('TC-SB-06 novo jogo carrega um puzzle do banco', async () => {
+  const user = await abrirJogo();
+  await user.click(screen.getByTestId('btn-novo'));
+  // Padrão das fixas na mesma notação do banco ('.' = não fixa)
+  const padrao = Array.from({ length: 36 }, (_, i) =>
+    celulaDoIndice(i).getAttribute('data-fixa') === 'true' ? celulaDoIndice(i).getAttribute('data-valor') : '.',
+  ).join('');
+  expect(PUZZLES).toContain(padrao);
+  for (let i = 0; i < 36; i++) {
+    if (padrao[i] === '.') expect(celulaDoIndice(i)).toHaveAttribute('data-valor', '');
+  }
+  expect(screen.getByTestId('cronometro')).toHaveTextContent(/^0$/);
+});
