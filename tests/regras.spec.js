@@ -22,3 +22,21 @@ test.each(['0', '1'])('TC-SB-09 trinca vertical de %s marca as três células', 
 
   for (let l = 2; l <= 4; l++) expect(celula(l, 4)).toHaveAttribute('data-erro', 'true');
 });
+
+test.each(['0', '1'])('TC-SB-10 mais de três %s na linha marca os quatro valores', async (valor) => {
+  const user = await abrirJogo({ puzzle: VAZIO });
+  const oposto = valor === '0' ? '1' : '0';
+  for (const c of [0, 1, 3, 4]) await definir(user, 1, c, valor);
+  await definir(user, 1, 2, oposto);
+
+  for (const c of [0, 1, 3, 4]) expect(celula(1, c)).toHaveAttribute('data-erro', 'true');
+});
+
+test.each(['0', '1'])('TC-SB-11 mais de três %s na coluna marca os quatro valores', async (valor) => {
+  const user = await abrirJogo({ puzzle: VAZIO });
+  const oposto = valor === '0' ? '1' : '0';
+  for (const l of [0, 1, 3, 4]) await definir(user, l, 2, valor);
+  await definir(user, 2, 2, oposto);
+
+  for (const l of [0, 1, 3, 4]) expect(celula(l, 2)).toHaveAttribute('data-erro', 'true');
+});
