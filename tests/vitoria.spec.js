@@ -22,3 +22,16 @@ test('TC-SB-15 solução válida vence, trava o tabuleiro e para o cronômetro',
     vi.useRealTimers();
   }
 });
+
+test('TC-SB-16 tabuleiro completo inválido mostra erros e continua editável', async () => {
+  const gradeInvalida = `01${S1.slice(2)}`;
+  const user = await abrirJogo({ puzzle: P1 });
+  await preencher(user, gradeInvalida);
+
+  expect(screen.getByTestId('mensagem')).not.toHaveTextContent(/Parabéns, você resolveu!/i);
+  expect(celula(0, 0)).toHaveAttribute('data-erro', 'true');
+  expect(celula(0, 1)).toHaveAttribute('data-erro', 'true');
+
+  await user.click(celula(0, 0));
+  expect(celula(0, 0)).toHaveAttribute('data-valor', '1');
+});
