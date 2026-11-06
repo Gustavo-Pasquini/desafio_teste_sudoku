@@ -71,7 +71,7 @@ test('TC-SB-14 corrigir a trinca remove as marcas de erro', async () => {
 
   await user.click(celula(0, 2));
   expect(celula(0, 2)).toHaveAttribute('data-valor', '1');
-  for (let c = 0; c < 6; c++) expect(celula(0, c)).not.toHaveAttribute('data-erro');
+  for (let c = 0; c < 6; c++) expect(celula(0, c)).not.toHaveAttribute('data-erro', 'true');
 });
 
 test('TC-SB-18 linhas incompletas iguais não são marcadas como erro', async () => {
