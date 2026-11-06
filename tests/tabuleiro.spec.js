@@ -60,6 +60,8 @@ test('TC-SB-05 limpar apaga só o que o jogador preencheu', async () => {
   await user.click(screen.getByTestId('btn-limpar'));
   for (const i of indices) expect(celulaDoIndice(i)).toHaveAttribute('data-valor', '');
   for (let i = 0; i < 36; i++) {
-    if (P1[i] !== '.') expect(celulaDoIndice(i)).toHaveAttribute('data-valor', P1[i]);
+    if (P1[i] === '.') continue;
+    expect(celulaDoIndice(i)).toHaveAttribute('data-valor', P1[i]);
+    expect(celulaDoIndice(i)).toHaveAttribute('data-fixa', 'true');
   }
 });
