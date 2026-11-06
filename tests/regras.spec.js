@@ -60,3 +60,13 @@ test('TC-SB-13 colunas completas repetidas marcam as 12 células', async () => {
     expect(celula(l, c)).toHaveAttribute('data-erro', 'true');
   }
 });
+
+test('TC-SB-14 corrigir a trinca remove as marcas de erro', async () => {
+  const user = await abrirJogo({ puzzle: VAZIO });
+  for (let c = 0; c < 3; c++) await definir(user, 0, c, '0');
+  expect(celula(0, 2)).toHaveAttribute('data-erro', 'true');
+
+  await user.click(celula(0, 2));
+  expect(celula(0, 2)).toHaveAttribute('data-valor', '1');
+  for (let c = 0; c < 6; c++) expect(celula(0, c)).not.toHaveAttribute('data-erro');
+});
