@@ -220,7 +220,7 @@ Cada integrante é **dono de arquivos de teste diferentes** (coluna "Arquivos").
 |---|---|---|---|
 | **G1** Setup: `package.json`, `vitest.config.js` (`environment: 'jsdom'`), `js/main.js` vazio, `.gitignore`, `index.html` esqueleto (elementos fixos da seção 3 **vazios**, sem texto nem atributos de estado), `tests/helpers.js` com `abrirJogo(params)`, `P1`, `S1` e `preencher(user, grade)` | `gustavo/g1-setup` | index.html, js/main.js, config, tests/helpers.js | — |
 | **G2** Tabuleiro 6 × 6 e células fixas | `gustavo/g2-tabuleiro` | tests/tabuleiro.spec.js | TC-SB-01 a 03 |
-| **G3** Alternar valor e limpar | `gustavo/g3-preencher` | tests/tabuleiro.spec.js | TC-SB-04, 05 |
+| **G3** Alternar valor e limpar | `gustavo/g3-preencher` | tests/tabuleiro.spec.js | TC-SB-04, 05, 19 |
 | **G4** Banco de puzzles e novo jogo | `gustavo/g4-novo-jogo` | tests/tabuleiro.spec.js | TC-SB-06, 07 |
 
 ### Breno
@@ -246,6 +246,7 @@ Para pôr `0` numa célula vazia: 1 clique. Para pôr `1`: 2 cliques. O helper `
 | TC-SB-03 | Fixa não muda | `puzzle=P1`, clicar 3 vezes em `celula-0-4` | Continua `1` |
 | TC-SB-04 | Ciclo do clique | `puzzle=P1`, clicar `celula-0-0` 1, 2 e 3 vezes | `0`, depois `1`, depois vazia |
 | TC-SB-05 | Limpar | `puzzle=P1`, preencher 5 células, clicar `btn-limpar` | As 5 ficam vazias; as 9 fixas continuam iguais |
+| TC-SB-19 | Limpar tira as marcas de erro | `puzzle=VAZIO`; linha 0 = `0 0 0` (trinca); `btn-limpar` | Antes de limpar, `celula-0-0` com `data-erro`; depois, as 3 vazias e nenhuma `data-erro` |
 | TC-SB-06 | Novo jogo | Sem parâmetro, clicar `btn-novo` | Tabuleiro carrega um puzzle de P1–P5 (padrão de fixas igual a um deles); células não fixas vazias; cronômetro volta a 0 |
 | TC-SB-07 | Puzzles do banco são válidos | Abrir cada um de P1–P5 por `?puzzle=` | Nenhuma célula com `data-erro` ao carregar |
 
