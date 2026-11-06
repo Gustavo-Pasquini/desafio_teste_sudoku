@@ -15,3 +15,10 @@ test.each(['0', '1'])('TC-SB-08 trinca horizontal de %s marca as três células'
   for (let c = 0; c < 3; c++) expect(celula(0, c)).toHaveAttribute('data-erro', 'true');
   expect(celula(0, 3)).not.toHaveAttribute('data-erro');
 });
+
+test.each(['0', '1'])('TC-SB-09 trinca vertical de %s marca as três células', async (valor) => {
+  const user = await abrirJogo({ puzzle: VAZIO });
+  for (let l = 2; l <= 4; l++) await definir(user, l, 4, valor);
+
+  for (let l = 2; l <= 4; l++) expect(celula(l, 4)).toHaveAttribute('data-erro', 'true');
+});
