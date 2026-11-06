@@ -29,7 +29,11 @@ test('TC-SB-02 P1: 9 células fixas com os valores do puzzle e 27 vazias', async
 
 test('TC-SB-03 célula fixa não muda com cliques', async () => {
   const user = await abrirJogo({ puzzle: P1 });
-  for (let i = 0; i < 3; i++) await user.click(celula(0, 4)); // 0-4 é fixa com 1 em P1
-  expect(celula(0, 4)).toHaveAttribute('data-valor', '1');
-  expect(celula(0, 4)).toHaveAttribute('data-fixa', 'true');
+  // 0-4 é fixa com 1 em P1. Confere depois de CADA clique: o ciclo tem 3 estados, então
+  // olhar só no fim deixaria passar uma fixa que gira 1 → vazia → 0 → 1.
+  for (let i = 0; i < 3; i++) {
+    await user.click(celula(0, 4));
+    expect(celula(0, 4)).toHaveAttribute('data-valor', '1');
+    expect(celula(0, 4)).toHaveAttribute('data-fixa', 'true');
+  }
 });
