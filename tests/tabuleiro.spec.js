@@ -1,7 +1,7 @@
 // Testes do tabuleiro, preenchimento e banco de puzzles (Gustavo — G2, G3, G4). Casos da seção 5 do PLANEJAMENTO.md.
 // Modo somente testes: o jogo ainda não existe, então estes testes FALHAM de propósito.
 import { test, expect } from 'vitest';
-import { abrirJogo, screen, celula, todasAsCelulas, preencher, P1, PUZZLES, S1 } from './helpers.js';
+import { abrirJogo, screen, celula, todasAsCelulas, preencher, P1, PUZZLES, S1, VAZIO } from './helpers.js';
 
 const celulaDoIndice = (i) => celula(Math.floor(i / 6), i % 6);
 
@@ -36,6 +36,15 @@ test('TC-SB-03 célula fixa não muda com cliques', async () => {
     expect(celula(0, 4)).toHaveAttribute('data-valor', '1');
     expect(celula(0, 4)).toHaveAttribute('data-fixa', 'true');
   }
+});
+
+test('TC-SB-19 limpar também tira as marcas de erro', async () => {
+  const user = await abrirJogo({ puzzle: VAZIO });
+  await preencher(user, '000' + '.'.repeat(33)); // trinca na linha 0
+  expect(celula(0, 0)).toHaveAttribute('data-erro', 'true'); // o erro aparece antes de limpar
+  await user.click(screen.getByTestId('btn-limpar'));
+  for (const c of [0, 1, 2]) expect(celula(0, c)).toHaveAttribute('data-valor', '');
+  expect(todasAsCelulas().filter((c) => c.getAttribute('data-erro') === 'true')).toHaveLength(0);
 });
 
 test('TC-SB-04 clique alterna vazia → 0 → 1 → vazia', async () => {
