@@ -105,3 +105,15 @@ test.each(PUZZLES.map((p, i) => [`P${i + 1}`, p]))('TC-SB-07 puzzle %s do banco 
   expect(todasAsCelulas().filter((c) => c.getAttribute('data-fixa') === 'true')).toHaveLength(dicas);
   expect(todasAsCelulas().filter((c) => c.getAttribute('data-erro') === 'true')).toHaveLength(0);
 });
+
+test('TC-SB-17 novo jogo sempre traz um puzzle diferente do atual', async () => {
+  const user = await abrirJogo({ puzzle: P1 });
+  let anterior = P1;
+  for (let i = 0; i < 10; i++) {
+    await user.click(screen.getByTestId('btn-novo'));
+    const atual = padraoDasFixas();
+    expect(PUZZLES).toContain(atual);
+    expect(atual).not.toBe(anterior);
+    anterior = atual;
+  }
+});
