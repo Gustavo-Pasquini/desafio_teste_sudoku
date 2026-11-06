@@ -117,3 +117,13 @@ test('TC-SB-17 novo jogo sempre traz um puzzle diferente do atual', async () => 
     anterior = atual;
   }
 });
+
+test('TC-SB-20 cronômetro começa no primeiro clique', async () => {
+  vi.useFakeTimers({ toFake: ['setTimeout', 'clearTimeout', 'setInterval', 'clearInterval', 'Date', 'performance'] });
+  const user = await abrirJogo({ puzzle: P1 }, { advanceTimers: vi.advanceTimersByTime });
+  vi.advanceTimersByTime(2000);
+  expect(screen.getByTestId('cronometro')).toHaveTextContent(/^0$/); // sem clique, não conta
+  await user.click(celula(0, 0));
+  vi.advanceTimersByTime(2000);
+  expect(Number(screen.getByTestId('cronometro').textContent)).toBeGreaterThanOrEqual(1);
+});
