@@ -47,3 +47,19 @@ test('TC-SB-04 clique alterna vazia → 0 → 1 → vazia', async () => {
   await user.click(celula(0, 0));
   expect(celula(0, 0)).toHaveAttribute('data-valor', '');
 });
+
+test('TC-SB-05 limpar apaga só o que o jogador preencheu', async () => {
+  const user = await abrirJogo({ puzzle: P1 });
+  // 0-0, 0-1, 0-2, 1-0 e 1-1 (nenhuma é fixa em P1), com os valores de S1
+  const indices = [0, 1, 2, 6, 7];
+  const grade = [...'.'.repeat(36)];
+  for (const i of indices) grade[i] = S1[i];
+  await preencher(user, grade.join(''));
+  for (const i of indices) expect(celulaDoIndice(i)).toHaveAttribute('data-valor', S1[i]);
+
+  await user.click(screen.getByTestId('btn-limpar'));
+  for (const i of indices) expect(celulaDoIndice(i)).toHaveAttribute('data-valor', '');
+  for (let i = 0; i < 36; i++) {
+    if (P1[i] !== '.') expect(celulaDoIndice(i)).toHaveAttribute('data-valor', P1[i]);
+  }
+});
