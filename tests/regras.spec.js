@@ -1,7 +1,7 @@
 // Testes das regras do Sudoku binário (Breno — B2, B3, B4).
 // Modo somente testes: todos falham de propósito enquanto o jogo não existe.
 import { test, expect } from 'vitest';
-import { abrirJogo, VAZIO, celula } from './helpers.js';
+import { abrirJogo, VAZIO, celula, todasAsCelulas } from './helpers.js';
 
 async function definir(user, l, c, valor) {
   await user.click(celula(l, c));
@@ -81,6 +81,6 @@ test('TC-SB-18 linhas incompletas iguais não são marcadas como erro', async ()
 
   for (const l of [0, 1]) for (let c = 0; c < 5; c++) {
     expect(celula(l, c)).toHaveAttribute('data-valor', linhaIncompleta[c]);
-    expect(celula(l, c)).not.toHaveAttribute('data-erro');
   }
+  expect(todasAsCelulas().filter((c) => c.getAttribute('data-erro') === 'true')).toHaveLength(0); // nenhuma das 36
 });
