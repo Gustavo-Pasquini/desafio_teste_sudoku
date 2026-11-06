@@ -19,7 +19,7 @@ Sudoku binário (Takuzu / Binairo) de **6 × 6**: **casos de teste de interface 
 - **Preenchimento:** clicar numa célula alterna vazia → `0` → `1` → vazia.
 - **Erros** aparecem na hora: as células que quebram uma regra ficam marcadas.
 - **Vitória:** as 36 células preenchidas e nenhuma regra quebrada. Mostra mensagem, para o cronômetro e trava o tabuleiro.
-- **Limpar** apaga só o que o jogador preencheu. **Novo jogo** sorteia outro puzzle do banco.
+- **Limpar** apaga só o que o jogador preencheu. **Novo jogo** sorteia outro puzzle do banco (sempre diferente do atual), zera o que foi preenchido e o cronômetro.
 - Todo puzzle do banco tem **solução única**.
 
 ## 2. Stack, comandos e estrutura
@@ -221,7 +221,7 @@ Cada integrante é **dono de arquivos de teste diferentes** (coluna "Arquivos").
 | **G1** Setup: `package.json`, `vitest.config.js` (`environment: 'jsdom'`), `js/main.js` vazio, `.gitignore`, `index.html` esqueleto (elementos fixos da seção 3 **vazios**, sem texto nem atributos de estado), `tests/helpers.js` com `abrirJogo(params)`, `P1`, `S1` e `preencher(user, grade)` | `gustavo/g1-setup` | index.html, js/main.js, config, tests/helpers.js | — |
 | **G2** Tabuleiro 6 × 6 e células fixas | `gustavo/g2-tabuleiro` | tests/tabuleiro.spec.js | TC-SB-01 a 03 |
 | **G3** Alternar valor e limpar | `gustavo/g3-preencher` | tests/tabuleiro.spec.js | TC-SB-04, 05, 19 |
-| **G4** Banco de puzzles e novo jogo | `gustavo/g4-novo-jogo` | tests/tabuleiro.spec.js | TC-SB-06, 07 |
+| **G4** Banco de puzzles e novo jogo | `gustavo/g4-novo-jogo` | tests/tabuleiro.spec.js | TC-SB-06, 07, 17 |
 
 ### Breno
 
@@ -247,8 +247,9 @@ Para pôr `0` numa célula vazia: 1 clique. Para pôr `1`: 2 cliques. O helper `
 | TC-SB-04 | Ciclo do clique | `puzzle=P1`, clicar `celula-0-0` 1, 2 e 3 vezes | `0`, depois `1`, depois vazia |
 | TC-SB-05 | Limpar | `puzzle=P1`, preencher 5 células, clicar `btn-limpar` | As 5 ficam vazias; as 9 fixas continuam iguais |
 | TC-SB-19 | Limpar tira as marcas de erro | `puzzle=VAZIO`; linha 0 = `0 0 0` (trinca); `btn-limpar` | Antes de limpar, `celula-0-0` com `data-erro`; depois, as 3 vazias e nenhuma `data-erro` |
-| TC-SB-06 | Novo jogo | Sem parâmetro, clicar `btn-novo` | Tabuleiro carrega um puzzle de P1–P5 (padrão de fixas igual a um deles); células não fixas vazias; cronômetro volta a 0 |
+| TC-SB-06 | Novo jogo | `puzzle=P1` com relógio falso: preencher `celula-0-0`, avançar 3 s, clicar `btn-novo` | Padrão de fixas igual a um de P1–P5; células não fixas vazias (o que foi preenchido some); `cronometro` = 0 |
 | TC-SB-07 | Puzzles do banco são válidos | Abrir cada um de P1–P5 por `?puzzle=` | Nenhuma célula com `data-erro` ao carregar |
+| TC-SB-17 | Novo jogo troca o puzzle | `puzzle=P1`, clicar `btn-novo` 10 vezes | A cada clique o padrão de fixas é um de P1–P5 e **diferente** do anterior |
 
 ### Breno — regras e vitória
 
