@@ -27,10 +27,11 @@ test.each(['0', '1'])('TC-SB-09 trinca vertical de %s marca as três células', 
 test.each(['0', '1'])('TC-SB-10 mais de três %s na linha marca os quatro valores', async (valor) => {
   const user = await abrirJogo({ puzzle: VAZIO });
   const oposto = valor === '0' ? '1' : '0';
+  await definir(user, 1, 2, oposto); // o oposto entra primeiro: nunca existe trinca, nem por um instante
   for (const c of [0, 1, 3, 4]) await definir(user, 1, c, valor);
-  await definir(user, 1, 2, oposto);
 
   for (const c of [0, 1, 3, 4]) expect(celula(1, c)).toHaveAttribute('data-erro', 'true');
+  expect(celula(1, 2)).not.toHaveAttribute('data-erro', 'true'); // o valor em minoria não é erro
 });
 
 test.each(['0', '1'])('TC-SB-11 mais de três %s na coluna marca os quatro valores', async (valor) => {
