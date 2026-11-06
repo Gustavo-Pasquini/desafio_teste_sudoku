@@ -70,3 +70,14 @@ test('TC-SB-14 corrigir a trinca remove as marcas de erro', async () => {
   expect(celula(0, 2)).toHaveAttribute('data-valor', '1');
   for (let c = 0; c < 6; c++) expect(celula(0, c)).not.toHaveAttribute('data-erro');
 });
+
+test('TC-SB-18 linhas incompletas iguais não são marcadas como erro', async () => {
+  const user = await abrirJogo({ puzzle: VAZIO });
+  const linhaIncompleta = '00110';
+  for (const l of [0, 1]) for (let c = 0; c < 5; c++) await definir(user, l, c, linhaIncompleta[c]);
+
+  for (const l of [0, 1]) for (let c = 0; c < 5; c++) {
+    expect(celula(l, c)).toHaveAttribute('data-valor', linhaIncompleta[c]);
+    expect(celula(l, c)).not.toHaveAttribute('data-erro');
+  }
+});
