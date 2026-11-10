@@ -1,13 +1,12 @@
 // Testes de vitória (Breno — B5). Modo somente testes: falham até o jogo existir.
-import { test, expect, vi } from 'vitest';
 import { abrirJogo, P1, S1, preencher, celula, todasAsCelulas, screen } from './helpers.js';
 
 test('TC-SB-15 solução válida vence, trava o tabuleiro e para o cronômetro', async () => {
-  vi.useFakeTimers({ toFake: ['setTimeout', 'clearTimeout', 'setInterval', 'clearInterval', 'Date', 'performance'] });
+  jest.useFakeTimers(); // relógio falso moderno: inclui Date e performance.now
   try {
-    const user = await abrirJogo({ puzzle: P1 }, { advanceTimers: vi.advanceTimersByTime });
+    const user = await abrirJogo({ puzzle: P1 }, { advanceTimers: jest.advanceTimersByTime });
     await preencher(user, S1.slice(0, 1) + '.'.repeat(35)); // 1º clique: o cronômetro começa
-    vi.advanceTimersByTime(3000);
+    jest.advanceTimersByTime(3000);
     await preencher(user, '.' + S1.slice(1));
 
     expect(screen.getByTestId('mensagem')).toHaveTextContent(/^Parabéns, você resolveu!$/);
@@ -19,10 +18,10 @@ test('TC-SB-15 solução válida vence, trava o tabuleiro e para o cronômetro',
 
     const tempoFinal = Number(screen.getByTestId('cronometro').textContent);
     expect(tempoFinal).toBeGreaterThanOrEqual(1);
-    vi.advanceTimersByTime(2000);
+    jest.advanceTimersByTime(2000);
     expect(screen.getByTestId('cronometro')).toHaveTextContent(new RegExp(`^${tempoFinal}$`)); // parou
   } finally {
-    vi.useRealTimers();
+    jest.useRealTimers();
   }
 });
 
