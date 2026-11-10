@@ -1,6 +1,5 @@
 // Testes do tabuleiro, preenchimento e banco de puzzles (Gustavo — G2, G3, G4). Casos da seção 5 do PLANEJAMENTO.md.
 // Modo somente testes: o jogo ainda não existe, então estes testes FALHAM de propósito.
-import { test, expect, vi, afterEach } from 'vitest';
 import { abrirJogo, screen, celula, todasAsCelulas, preencher, P1, PUZZLES, S1, VAZIO } from './helpers.js';
 
 const celulaDoIndice = (i) => celula(Math.floor(i / 6), i % 6);
@@ -11,7 +10,7 @@ const padraoDasFixas = () =>
   ).join('');
 
 afterEach(() => {
-  vi.useRealTimers();
+  jest.useRealTimers();
 });
 
 test('TC-SB-01 tabuleiro 6 × 6: 36 células', async () => {
@@ -85,10 +84,10 @@ test('TC-SB-05 limpar apaga só o que o jogador preencheu', async () => {
 });
 
 test('TC-SB-06 novo jogo carrega um puzzle do banco e zera o jogo', async () => {
-  vi.useFakeTimers({ toFake: ['setTimeout', 'clearTimeout', 'setInterval', 'clearInterval', 'Date', 'performance'] });
-  const user = await abrirJogo({ puzzle: P1 }, { advanceTimers: vi.advanceTimersByTime });
+  jest.useFakeTimers(); // relógio falso moderno: inclui Date e performance.now
+  const user = await abrirJogo({ puzzle: P1 }, { advanceTimers: jest.advanceTimersByTime });
   await user.click(celula(0, 0)); // jogo em andamento: o jogador preencheu algo...
-  vi.advanceTimersByTime(3000); // ... e o tempo passou
+  jest.advanceTimersByTime(3000); // ... e o tempo passou
   await user.click(screen.getByTestId('btn-novo'));
   const padrao = padraoDasFixas();
   expect(PUZZLES).toContain(padrao);
@@ -119,11 +118,11 @@ test('TC-SB-17 novo jogo sempre traz um puzzle diferente do atual', async () => 
 });
 
 test('TC-SB-20 cronômetro começa no primeiro clique', async () => {
-  vi.useFakeTimers({ toFake: ['setTimeout', 'clearTimeout', 'setInterval', 'clearInterval', 'Date', 'performance'] });
-  const user = await abrirJogo({ puzzle: P1 }, { advanceTimers: vi.advanceTimersByTime });
-  vi.advanceTimersByTime(2000);
+  jest.useFakeTimers(); // relógio falso moderno: inclui Date e performance.now
+  const user = await abrirJogo({ puzzle: P1 }, { advanceTimers: jest.advanceTimersByTime });
+  jest.advanceTimersByTime(2000);
   expect(screen.getByTestId('cronometro')).toHaveTextContent(/^0$/); // sem clique, não conta
   await user.click(celula(0, 0));
-  vi.advanceTimersByTime(2000);
+  jest.advanceTimersByTime(2000);
   expect(Number(screen.getByTestId('cronometro').textContent)).toBeGreaterThanOrEqual(1);
 });

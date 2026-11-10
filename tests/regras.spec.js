@@ -1,6 +1,5 @@
 // Testes das regras do Sudoku binário (Breno — B2, B3, B4).
 // Modo somente testes: todos falham de propósito enquanto o jogo não existe.
-import { test, expect } from 'vitest';
 import { abrirJogo, VAZIO, celula, todasAsCelulas } from './helpers.js';
 
 async function definir(user, l, c, valor) {
