@@ -1,7 +1,7 @@
 // Testes das regras do Sudoku binário (Breno — B2, B3, B4).
 // Modo somente testes: todos falham de propósito enquanto o jogo não existe.
 import { test, expect } from 'vitest';
-import { abrirJogo, VAZIO, celula } from './helpers.js';
+import { abrirJogo, VAZIO, celula, todasAsCelulas } from './helpers.js';
 
 async function definir(user, l, c, valor) {
   await user.click(celula(l, c));
@@ -13,7 +13,7 @@ test.each(['0', '1'])('TC-SB-08 trinca horizontal de %s marca as três células'
   for (let c = 0; c < 3; c++) await definir(user, 0, c, valor);
 
   for (let c = 0; c < 3; c++) expect(celula(0, c)).toHaveAttribute('data-erro', 'true');
-  expect(celula(0, 3)).not.toHaveAttribute('data-erro');
+  expect(celula(0, 3)).not.toHaveAttribute('data-erro', 'true');
 });
 
 test.each(['0', '1'])('TC-SB-09 trinca vertical de %s marca as três células', async (valor) => {
@@ -21,24 +21,27 @@ test.each(['0', '1'])('TC-SB-09 trinca vertical de %s marca as três células', 
   for (let l = 2; l <= 4; l++) await definir(user, l, 4, valor);
 
   for (let l = 2; l <= 4; l++) expect(celula(l, 4)).toHaveAttribute('data-erro', 'true');
+  for (const l of [0, 1, 5]) expect(celula(l, 4)).not.toHaveAttribute('data-erro', 'true'); // só a trinca
 });
 
 test.each(['0', '1'])('TC-SB-10 mais de três %s na linha marca os quatro valores', async (valor) => {
   const user = await abrirJogo({ puzzle: VAZIO });
   const oposto = valor === '0' ? '1' : '0';
+  await definir(user, 1, 2, oposto); // o oposto entra primeiro: nunca existe trinca, nem por um instante
   for (const c of [0, 1, 3, 4]) await definir(user, 1, c, valor);
-  await definir(user, 1, 2, oposto);
 
   for (const c of [0, 1, 3, 4]) expect(celula(1, c)).toHaveAttribute('data-erro', 'true');
+  expect(celula(1, 2)).not.toHaveAttribute('data-erro', 'true'); // o valor em minoria não é erro
 });
 
 test.each(['0', '1'])('TC-SB-11 mais de três %s na coluna marca os quatro valores', async (valor) => {
   const user = await abrirJogo({ puzzle: VAZIO });
   const oposto = valor === '0' ? '1' : '0';
+  await definir(user, 2, 2, oposto); // o oposto entra primeiro: nunca existe trinca, nem por um instante
   for (const l of [0, 1, 3, 4]) await definir(user, l, 2, valor);
-  await definir(user, 2, 2, oposto);
 
   for (const l of [0, 1, 3, 4]) expect(celula(l, 2)).toHaveAttribute('data-erro', 'true');
+  expect(celula(2, 2)).not.toHaveAttribute('data-erro', 'true'); // o valor em minoria não é erro
 });
 
 test('TC-SB-12 linhas completas repetidas marcam as 12 células', async () => {
@@ -68,7 +71,7 @@ test('TC-SB-14 corrigir a trinca remove as marcas de erro', async () => {
 
   await user.click(celula(0, 2));
   expect(celula(0, 2)).toHaveAttribute('data-valor', '1');
-  for (let c = 0; c < 6; c++) expect(celula(0, c)).not.toHaveAttribute('data-erro');
+  for (let c = 0; c < 6; c++) expect(celula(0, c)).not.toHaveAttribute('data-erro', 'true');
 });
 
 test('TC-SB-18 linhas incompletas iguais não são marcadas como erro', async () => {
@@ -78,6 +81,6 @@ test('TC-SB-18 linhas incompletas iguais não são marcadas como erro', async ()
 
   for (const l of [0, 1]) for (let c = 0; c < 5; c++) {
     expect(celula(l, c)).toHaveAttribute('data-valor', linhaIncompleta[c]);
-    expect(celula(l, c)).not.toHaveAttribute('data-erro');
   }
+  expect(todasAsCelulas().filter((c) => c.getAttribute('data-erro') === 'true')).toHaveLength(0); // nenhuma das 36
 });
