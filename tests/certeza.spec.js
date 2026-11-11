@@ -22,3 +22,14 @@ test('TC-SB-22 célula certa não muda com clique esquerdo', async () => {
     expect(celula(0, 0)).toHaveAttribute('data-certa', 'true');
   }
 });
+
+test('TC-SB-23 vazias e fixas não podem ser marcadas', async () => {
+  const user = await abrirJogo({ puzzle: P1 });
+  await cliqueDireito(user, celula(0, 1)); // vazia
+  await cliqueDireito(user, celula(0, 4)); // fixa (1)
+  expect(celula(0, 1)).not.toHaveAttribute('data-certa', 'true');
+  expect(celula(0, 4)).not.toHaveAttribute('data-certa', 'true');
+  await user.click(celula(0, 0));
+  await cliqueDireito(user, celula(0, 0)); // preenchida pelo jogador
+  expect(celula(0, 0)).toHaveAttribute('data-certa', 'true');
+});
