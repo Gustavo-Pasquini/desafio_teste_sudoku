@@ -11,3 +11,14 @@ test('TC-SB-21 clique direito marca e desmarca a célula como certa', async () =
   expect(celula(0, 0)).not.toHaveAttribute('data-certa', 'true');
   expect(celula(0, 0)).toHaveAttribute('data-valor', '0');
 });
+
+test('TC-SB-22 célula certa não muda com clique esquerdo', async () => {
+  const user = await abrirJogo({ puzzle: P1 });
+  await user.click(celula(0, 0));
+  await cliqueDireito(user, celula(0, 0));
+  for (let i = 0; i < 3; i++) {
+    await user.click(celula(0, 0));
+    expect(celula(0, 0)).toHaveAttribute('data-valor', '0');
+    expect(celula(0, 0)).toHaveAttribute('data-certa', 'true');
+  }
+});
