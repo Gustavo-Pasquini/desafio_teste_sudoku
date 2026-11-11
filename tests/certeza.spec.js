@@ -33,3 +33,17 @@ test('TC-SB-23 vazias e fixas não podem ser marcadas', async () => {
   await cliqueDireito(user, celula(0, 0)); // preenchida pelo jogador
   expect(celula(0, 0)).toHaveAttribute('data-certa', 'true');
 });
+
+test('TC-SB-24 Limpar mantém as certas; Novo jogo apaga tudo', async () => {
+  const user = await abrirJogo({ puzzle: P1 });
+  await user.click(celula(0, 0)); // 0
+  await cliqueDireito(user, celula(0, 0)); // certa
+  await user.click(celula(0, 1));
+  await user.click(celula(0, 1)); // 1
+  await user.click(screen.getByTestId('btn-limpar'));
+  expect(celula(0, 0)).toHaveAttribute('data-valor', '0');
+  expect(celula(0, 0)).toHaveAttribute('data-certa', 'true');
+  expect(celula(0, 1)).toHaveAttribute('data-valor', '');
+  await user.click(screen.getByTestId('btn-novo'));
+  expect(todasAsCelulas().filter((c) => c.getAttribute('data-certa') === 'true')).toHaveLength(0);
+});
