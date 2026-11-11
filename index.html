@@ -4,20 +4,24 @@
   <meta charset="utf-8">
   <meta name="viewport" content="width=device-width, initial-scale=1">
   <title>Sudoku binário</title>
+  <link rel="stylesheet" href="css/estilo.css">
 </head>
 <body>
   <!--
     ESQUELETO DA TELA (contrato da seção 3 do PLANEJAMENTO.md).
     Elementos fixos, VAZIOS: sem texto, sem valor e sem atributos de estado
     (data-estado, disabled, hidden). Os testes abrem este HTML.
-    Fase GREEN desativada: o jogo (js/) ainda não existe.
+    O jogo (js/main.js) preenche esses elementos ao abrir a página.
   -->
   <header>
+    <h1>Sudoku binário</h1>
     <button data-testid="btn-novo"></button>
     <button data-testid="btn-limpar"></button>
+    <span class="rotulo">Tempo (s):</span>
     <span data-testid="cronometro"></span>
   </header>
   <main>
+    <p class="regras">Clique para alternar vazia → 0 → 1. Cada linha e coluna: três 0 e três 1, nunca três iguais seguidos, e nenhuma linha ou coluna repetida.</p>
     <div data-testid="tabuleiro"></div>
   </main>
   <footer>

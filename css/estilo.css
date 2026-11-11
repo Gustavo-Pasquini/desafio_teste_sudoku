@@ -1,0 +1,83 @@
+:root {
+  --fundo: #f6f7fb;
+  --texto: #1f2430;
+  --borda: #c3c8d4;
+  --celula: #ffffff;
+  --fixa: #dfe3ec;
+  --erro: #fde2e2;
+  --erro-borda: #d64545;
+  --destaque: #2f6fde;
+  --vitoria: #1f8a4c;
+}
+
+* { box-sizing: border-box; }
+
+body {
+  margin: 0;
+  padding: 16px;
+  min-height: 100vh;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 12px;
+  font-family: system-ui, -apple-system, 'Segoe UI', sans-serif;
+  background: var(--fundo);
+  color: var(--texto);
+}
+
+header {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  justify-content: center;
+  gap: 8px 12px;
+}
+
+h1 { width: 100%; margin: 0 0 4px; text-align: center; font-size: 1.6rem; }
+
+header button {
+  padding: 8px 14px;
+  font: inherit;
+  border: 1px solid var(--destaque);
+  border-radius: 6px;
+  background: var(--destaque);
+  color: #fff;
+  cursor: pointer;
+}
+header button:disabled { opacity: 0.5; cursor: not-allowed; }
+
+.rotulo { margin-left: 8px; }
+[data-testid="cronometro"] { font-variant-numeric: tabular-nums; font-weight: 600; min-width: 2ch; }
+
+.regras { max-width: 360px; margin: 0 auto 12px; text-align: center; font-size: 0.9rem; }
+
+[data-testid="tabuleiro"] {
+  display: grid;
+  grid-template-columns: repeat(6, 1fr);
+  gap: 4px;
+  width: min(360px, 100%);
+  margin: 0 auto;
+}
+
+[data-testid="tabuleiro"] button {
+  aspect-ratio: 1;
+  font: 600 1.5rem/1 system-ui, sans-serif;
+  border: 2px solid var(--borda);
+  border-radius: 6px;
+  background: var(--celula);
+  color: var(--destaque);
+  cursor: pointer;
+}
+[data-testid="tabuleiro"] button[data-fixa="true"] {
+  background: var(--fixa);
+  color: var(--texto);
+  cursor: default;
+}
+[data-testid="tabuleiro"] button[data-erro="true"] {
+  background: var(--erro);
+  border-color: var(--erro-borda);
+  color: var(--erro-borda);
+}
+[data-testid="tabuleiro"] button:disabled { cursor: default; }
+
+[data-testid="mensagem"] { min-height: 1.5em; font-weight: 600; color: var(--vitoria); }
