@@ -22,6 +22,7 @@ Sudoku binário (Takuzu / Binairo) de **6 × 6**: **casos de teste de interface 
 - **Vitória:** as 36 células preenchidas e nenhuma regra quebrada. Mostra mensagem, para o cronômetro e trava o tabuleiro.
 - **Limpar** apaga só o que o jogador preencheu. **Novo jogo** sorteia outro puzzle do banco (sempre diferente do atual), zera o que foi preenchido e o cronômetro.
 - Todo puzzle do banco tem **solução única**.
+- **Células certas (verde):** clique direito numa célula preenchida pelo jogador marca/desmarca como certa (`data-certa="true"`). Célula certa não muda com clique esquerdo. Vazias e fixas não podem ser marcadas. **Limpar** mantém as certas; **Novo jogo** apaga tudo.
 
 ## 2. Stack, comandos e estrutura
 
@@ -223,6 +224,7 @@ Cada integrante é **dono de arquivos de teste diferentes** (coluna "Arquivos").
 | **G2** Tabuleiro 6 × 6 e células fixas | `gustavo/g2-tabuleiro` | tests/tabuleiro.spec.js | TC-SB-01 a 03 |
 | **G3** Alternar valor e limpar | `gustavo/g3-preencher` | tests/tabuleiro.spec.js | TC-SB-04, 05, 19 |
 | **G4** Banco de puzzles e novo jogo | `gustavo/g4-novo-jogo` | tests/tabuleiro.spec.js | TC-SB-06, 07, 17, 20 |
+| **G6** Células certas (verde) | `gustavo/g6-certeza` | tests/certeza.spec.js | TC-SB-21 a 24 |
 
 ### Breno
 
@@ -252,6 +254,10 @@ Para pôr `0` numa célula vazia: 1 clique. Para pôr `1`: 2 cliques. O helper `
 | TC-SB-07 | Puzzles do banco são válidos | Abrir cada um de P1–P5 por `?puzzle=` | Nenhuma célula com `data-erro` ao carregar |
 | TC-SB-17 | Novo jogo troca o puzzle | `puzzle=P1`, clicar `btn-novo` 10 vezes | A cada clique o padrão de fixas é um de P1–P5 e **diferente** do anterior |
 | TC-SB-20 | Cronômetro começa no 1º clique | `puzzle=P1` com relógio falso: avançar 2 s sem clicar; clicar `celula-0-0`; avançar 2 s | Antes do clique = 0; depois ≥ 1 |
+| TC-SB-21 | Marcar como certa | `puzzle=P1`; pôr 0 em 0-0; clique direito nela; clique direito de novo | Ganha `data-certa="true"`; depois perde a marca e continua com 0 |
+| TC-SB-22 | Certa fica protegida | Marcar 0-0 como certa e clicar 3 vezes nela | `data-valor` continua 0 e a marca continua |
+| TC-SB-23 | Só preenchidas pelo jogador | Clique direito na vazia 0-1 e na fixa 0-4; depois em 0-0 preenchida | 0-1 e 0-4 sem marca; 0-0 marcada |
+| TC-SB-24 | Limpar e Novo jogo | 0-0 = 0 (certa), 0-1 = 1; `btn-limpar`; depois `btn-novo` | Limpar mantém 0-0 (certa) e apaga 0-1; Novo jogo deixa nenhuma célula certa |
 
 ### Breno — regras e vitória
 
